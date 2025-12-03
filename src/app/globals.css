@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 15, 15, 15;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Heart reaction container */
+.reaction-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  pointer-events: none;
+  z-index: 100;
+  width: 80px;
+  height: 300px;
+  overflow: hidden;
+}
+
+/* Floating heart animation */
+.floating-heart {
+  position: absolute;
+  bottom: 0;
+  animation: floatUp 2s ease-out forwards;
+  font-size: 2rem;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-100px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-250px) scale(0.8);
+  }
+}
+
+/* Pulse animation for heart button */
+.pulse-heart {
+  animation: pulseHeart 0.3s ease-in-out;
+}
+
+@keyframes pulseHeart {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .reaction-container {
+    right: 10px;
+    bottom: 80px;
+  }
+}

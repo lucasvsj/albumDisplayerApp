@@ -27,6 +27,8 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/photodisplay?schema=public
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-super-secret-key-change-me}
       NEXTAUTH_URL: ${NEXTAUTH_URL:-https://album.lucasvsj.com}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@photodisplay.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
     volumes:
       - uploads_data:/app/public/uploads
     networks:

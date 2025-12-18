@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import type { TouchEvent } from 'react'
 import Image from 'next/image'
+import ZoomableImage from '@/components/ZoomableImage'
 
 interface Photo {
   id: string
@@ -49,7 +51,7 @@ export default function Home() {
     if (isTransitioning) return
     setIsTransitioning(true)
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1))
+      setCurrentIndex((prev: number) => (prev > 0 ? prev - 1 : photos.length - 1))
       setIsTransitioning(false)
     }, 150)
   }, [photos.length, isTransitioning])
@@ -58,7 +60,7 @@ export default function Home() {
     if (isTransitioning) return
     setIsTransitioning(true)
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0))
+      setCurrentIndex((prev: number) => (prev < photos.length - 1 ? prev + 1 : 0))
       setIsTransitioning(false)
     }, 150)
   }, [photos.length, isTransitioning])
@@ -76,11 +78,11 @@ export default function Home() {
           x: Math.random() * 80 + 10,
           scale: Math.random() * 0.5 + 0.8,
         }
-        setFloatingHearts((prev) => [...prev, newHeart])
-        setHeartCounter((prev) => prev + 1)
+        setFloatingHearts((prev: FloatingHeart[]) => [...prev, newHeart])
+        setHeartCounter((prev: number) => prev + 1)
 
         setTimeout(() => {
-          setFloatingHearts((prev) => prev.filter((h) => h.id !== newHeart.id))
+          setFloatingHearts((prev: FloatingHeart[]) => prev.filter((h: FloatingHeart) => h.id !== newHeart.id))
         }, 2000)
       }, i * 100)
     }
@@ -103,12 +105,26 @@ export default function Home() {
 
   // Touch swipe support
   const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [isPinching, setIsPinching] = useState(false)
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length > 1) {
+      setIsPinching(true)
+      setTouchStart(null)
+      return
+    }
+    if (isPinching) return
     setTouchStart(e.touches[0].clientX)
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (isPinching) {
+      if (e.touches.length <= 1) {
+        setIsPinching(false)
+      }
+      setTouchStart(null)
+      return
+    }
     if (touchStart === null) return
 
     const touchEnd = e.changedTouches[0].clientX
@@ -205,11 +221,10 @@ export default function Home() {
             isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
           }`}
         >
-          <Image
+          <ZoomableImage
             src={currentPhoto.path}
             alt={currentPhoto.filename}
-            fill
-            className="object-contain drop-shadow-2xl"
+            imageClassName="object-contain drop-shadow-2xl"
             priority
             unoptimized
           />
